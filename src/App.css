@@ -1,0 +1,57 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.todoCard:hover {
+  padding-bottom: 20px;
+  padding-top: 20px;
+  box-shadow: 0px 0px 7px black;
+}
+.iconButton {
+  transition: all 0.2s !important;
+}
+
+@font-face {
+  font-family: Alexandria;
+  src: url(../public/fonts/Alexandria-SemiBold.ttf);
+}
+@font-face {
+  font-family: AlexandriaThin;
+  src: url(../public/fonts/Alexandria-ExtraLight.ttf);
+  font-weight: 100;
+}
