@@ -1,5 +1,4 @@
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -59,7 +58,6 @@ export default function TodoList() {
   }
 
   useEffect(() => {
-    //console.log("calling UseEffect");
     const storageTodos = JSON.parse(localStorage.getItem("todos"));
     SetTodos(storageTodos);
   }, []);
@@ -87,7 +85,6 @@ export default function TodoList() {
             exclusive
             onChange={changeDisplayType}
             aria-label="Platform"
-            color="primary"
           >
             <ToggleButton value="all">الكل</ToggleButton>
             <ToggleButton value="completed">منجز</ToggleButton>
