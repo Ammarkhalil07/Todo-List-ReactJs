@@ -18,17 +18,16 @@ export default function TodoList() {
   const [titleInput, setTitleInput] = useState("");
   const [displayedTodosType, setDisplayedTodosType] = useState("all");
 
-  const completedTodos = useMemo(() => {
-    return todos.filter((t) => {
-      return t.isCompleted;
-    });
-  }, [todos]);
+  // ✅ Safe memoized filters
+  const completedTodos = useMemo(
+    () => todos.filter((t) => t.isCompleted),
+    [todos]
+  );
 
-  const notCompletedTodos = useMemo(() => {
-    return todos.filter((t) => {
-      return !t.isCompleted;
-    });
-  }, [todos]);
+  const notCompletedTodos = useMemo(
+    () => todos.filter((t) => !t.isCompleted),
+    [todos]
+  );
 
   let todosToBeRendered = todos;
 
@@ -36,13 +35,11 @@ export default function TodoList() {
     todosToBeRendered = completedTodos;
   } else if (displayedTodosType === "non-completed") {
     todosToBeRendered = notCompletedTodos;
-  } else {
-    todosToBeRendered = todos;
   }
 
-  const todosJsx = todosToBeRendered.map((t) => {
-    return <Todo key={t.id} todo={t} />;
-  });
+  const todosJsx = todosToBeRendered.map((t) => (
+    <Todo key={t.id} todo={t} />
+  ));
 
   function handleAddClick() {
     const newTodo = {
@@ -51,80 +48,67 @@ export default function TodoList() {
       details: "",
       isCompleted: false,
     };
+
     const updatedTodos = [...todos, newTodo];
     SetTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
   }
 
+  // ✅ Safe localStorage load
   useEffect(() => {
-    const storageTodos = JSON.parse(localStorage.getItem("todos"));
+    const storageTodos = JSON.parse(localStorage.getItem("todos")) || [];
     SetTodos(storageTodos);
   }, []);
 
-  function changeDisplayType(e) {
-    setDisplayedTodosType(e.target.value);
+  function changeDisplayType(_, value) {
+    if (value !== null) {
+      setDisplayedTodosType(value);
+    }
   }
 
   return (
     <Container maxWidth="sm">
-      <Card
-        sx={{ minWidth: 275 }}
-        style={{ maxHeight: "80vh", overflow: "scroll" }}
-      >
+      <Card sx={{ minWidth: 275, maxHeight: "80vh", overflow: "scroll" }}>
         <CardContent>
           <Typography style={{ fontSize: "30px" }} variant="h3">
             مهامي
           </Typography>
-          <Divider style={{ marginTop: "15px" }} />
-          {/* toggle icons */}
+
+          <Divider sx={{ mt: 2 }} />
+
           <ToggleButtonGroup
-            style={{ direction: "ltr", marginTop: "10px" }}
+            sx={{ mt: 2, direction: "ltr" }}
             color="primary"
             value={displayedTodosType}
             exclusive
             onChange={changeDisplayType}
-            aria-label="Platform"
           >
             <ToggleButton value="all">الكل</ToggleButton>
             <ToggleButton value="completed">منجز</ToggleButton>
             <ToggleButton value="non-completed">غير منجز</ToggleButton>
           </ToggleButtonGroup>
 
-          {/* all TODOS */}
-
           {todosJsx}
 
-          {/* Input + ADD button  */}
-
-          <Grid container style={{ marginTop: "10px" }} spacing={2}>
-            <Grid size={8} display="flex" justifyContent="space-around">
+          <Grid container sx={{ mt: 2 }} spacing={2}>
+            <Grid item xs={8}>
               <TextField
-                style={{ width: "100%" }}
-                id="outlined-basic"
-                label="عنوان المهمه"
-                variant="outlined"
+                fullWidth
+                label="عنوان المهمة"
                 value={titleInput}
-                onChange={(e) => {
-                  setTitleInput(e.target.value);
-                }}
+                onChange={(e) => setTitleInput(e.target.value)}
               />
             </Grid>
-            <Grid
-              size={4}
-              display="flex"
-              alignItems="center"
-              justifyContent="space-around"
-            >
+
+            <Grid item xs={4}>
               <Button
-                style={{ width: "100%", height: "100%" }}
+                fullWidth
                 variant="contained"
-                onClick={() => {
-                  handleAddClick();
-                }}
-                disabled={titleInput.length === 0}
+                disabled={!titleInput}
+                onClick={handleAddClick}
               >
-                إضافه
+                إضافة
               </Button>
             </Grid>
           </Grid>
